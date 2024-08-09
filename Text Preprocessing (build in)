@@ -1,0 +1,56 @@
+#test process build in
+
+import pandas as pd
+import contractions
+import emoji
+import re
+import string
+from word2number import w2n
+import nltk
+from nltk.corpus import stopwords
+
+# Download stopwords from NLTK
+nltk.download('stopwords')
+
+# Function to replace contractions
+def replace_contractions(text):
+    return contractions.fix(text)
+
+# Function to replace emojis with text
+def replace_emojis(text):
+    return emoji.demojize(text)
+
+# Function to convert numbers to text
+def convert_numbers(text):
+    return ' '.join([w2n.word_to_num(word) if word.isdigit() else word for word in text.split()])
+
+# Function to convert text to lowercase
+def to_lowercase(text):
+    return text.lower()
+
+# Function to remove URLs
+def remove_urls(text):
+    return re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
+
+# Function to remove punctuation
+def remove_punctuation(text):
+    return text.translate(str.maketrans('', '', string.punctuation))
+
+# Function to remove stopwords
+def remove_stopwords(text):
+    stop_words = set(stopwords.words('english'))
+    return ' '.join([word for word in text.split() if word not in stop_words])
+
+# Function to process text
+def process_text(text):
+    text = replace_contractions(text)
+    text = replace_emojis(text)
+    text = convert_numbers(text)
+    text = to_lowercase(text)
+    text = remove_urls(text)
+    text = remove_punctuation(text)
+    text = remove_stopwords(text)
+    return text
+
+data['replace_emoji']=data["text"].apply(lambda x:replace_emoji(x))
+data["clean_text"]=data['replace_emoji'].apply(lambda X: process_text(X))
