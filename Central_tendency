@@ -1,0 +1,49 @@
+import numpy as np
+import statistics
+
+def find_mean(list1):
+    total = 0
+    for ele in list1:
+        total += ele
+    mean = total / len(list1)
+    return mean
+
+def find_median(list1):
+    list1.sort()
+    print("Sorted list elements are ::", list1)
+    n = len(list1)
+    if n % 2 == 0:
+        median = (list1[n // 2] + list1[n // 2 - 1]) / 2
+    else:
+        median = list1[n // 2]
+    return median
+
+def find_mode(list1):
+    unq_list = []
+    for ele in list1:
+        if ele not in unq_list:
+            unq_list.append(ele)
+    max_count = 0
+    mode_list = []
+    for ele in unq_list:
+        currentCount = list1.count(ele)
+        if currentCount > max_count:
+            max_count = currentCount
+            mode_list = [ele]
+        elif currentCount == max_count:
+            mode_list.append(ele)
+    return mode_list
+
+# Input section
+list1 = []
+n = int(input("Enter number of elements :: "))
+for i in range(n):
+    list1.append(int(input("Enter a number :: ")))
+
+print("List elements are ::", list1)
+print("Mean (built-in):", np.mean(list1))
+print("Mean (without built-in):", find_mean(list1))
+print("Median (built-in):", np.median(list1))
+print("Median (without built-in):", find_median(list1))
+print("Mode (built-in):", statistics.multimode(list1))
+print("Mode (without built-in):", find_mode(list1))
