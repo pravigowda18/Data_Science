@@ -1,0 +1,49 @@
+import pandas as pd
+import numpy as np
+# Function to calculate Euclidean distance
+def euclidean_distance(instance1, instance2):
+  return np.linalg.norm(instance1 - instance2)
+# Function to calculate Manhattan distance
+def manhattan_distance(instance1, instance2):
+  return np.sum(np.abs(instance1 - instance2))
+# Function to calculate Cosine similarity
+def cosine_similarity(instance1, instance2):
+  dot_product = np.dot(instance1, instance2)
+  norm1 = np.linalg.norm(instance1)
+  norm2 = np.linalg.norm(instance2)
+  return dot_product / (norm1 * norm2)
+# Load CSV file
+file_path = '/content/drive/MyDrive/2nd sem/dataset/homeprices_multiple.csv' #input("Enter the path to the CSV file: ")
+df = pd.read_csv(file_path)
+
+
+while True:
+  print("1. Euclidean Distance")
+  print("2. Manhattan Distance")
+  print("3. Cosine Similarity")
+  print("4. Exit")
+  choice = int(input("Enter your choice: "))
+
+  indx1 = int(input("Enter the first instance: "))
+  indx2 = int(input("Enter the second instance: "))
+
+  if 0<=indx1<=len(df) and 0<=indx2<=len(df):
+    instance1 = df.iloc[indx1, :-1].values  # Exclude the last column (target)
+    instance2 = df.iloc[indx2, :-1].values
+
+  else:
+    print("Invalid indices. Please enter valid indices.")
+
+  if choice == 1:
+    distance = euclidean_distance(instance1, instance2)
+    print("Euclidean Distance: ", distance)
+  elif choice == 2:
+    distance = manhattan_distance(instance1, instance2)
+    print("Manhattan Distance: ", distance)
+  elif choice == 3:
+    distance = cosine_similarity(instance1, instance2)
+    print("Cosine Similarity: ", distance)
+  elif choice == 4:
+    break
+  else:
+    print("Invalid choice. Please try again.")
