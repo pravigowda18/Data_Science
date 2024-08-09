@@ -1,0 +1,72 @@
+import numpy as np
+import math
+from scipy import stats
+
+def find_range(list1):
+    maxElement = minElement = list1[0]
+    for ele in list1:
+        if ele > maxElement:
+            maxElement = ele
+        if ele < minElement:
+            minElement = ele
+    rangeValue = maxElement - minElement
+    return rangeValue
+
+def find_variance(list1):
+    total = sum(list1)
+    mean = total / len(list1)
+    sumValue = sum((i - mean) ** 2 for i in list1)
+    variance = sumValue / len(list1)
+    return variance
+
+def find_sd(list1):
+    sd = math.sqrt(find_variance(list1))
+    return sd
+
+def percentile_midpoint(data, percent):
+    sorted_data = sorted(data)
+    n = len(sorted_data)
+    
+    # Calculate the position of the percentile
+    k = (n - 1) * percent
+    f = int(k)  # floor value
+    c = k - f   # fractional part
+    if c == 0:
+        # If k is an integer, return the exact value at that position
+        return sorted_data[f]
+    else:
+        # Midpoint interpolation between the two closest ranks
+        return (sorted_data[f] + sorted_data[f + 1]) / 2
+
+def find_iqr_midpoint(data):
+    Q1 = percentile_midpoint(data, 0.25)  # Calculate the 25th percentile
+    Q3 = percentile_midpoint(data, 0.75)  # Calculate the 75th percentile
+    IQR = Q3 - Q1  # Calculate the IQR
+    return IQR
+
+# Input section
+list1 = []
+n = int(input("Enter the number of elements: "))
+for i in range(n):
+    ele = int(input("Enter an element: "))
+    list1.append(ele)
+
+print("List elements are:", list1) 
+print("The range (without built-in):", find_range(list1))
+
+maximum = np.max(list1)
+minimum = np.min(list1)
+range_value = maximum - minimum
+print("The range (with built-in):", range_value)
+
+print("The variance (without built-in):", find_variance(list1))
+print("The variance (with built-in):", np.var(list1))
+
+print("The standard deviation (without built-in):", find_sd(list1))
+print("The standard deviation (with built-in):", np.std(list1))
+
+iqr = find_iqr_midpoint(list1)
+print("Interquartile Range (without built-in function):", iqr)
+
+IQR = stats.iqr(list1, interpolation='midpoint')
+print("IQR (with built-in function):", IQR)
