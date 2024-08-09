@@ -1,0 +1,123 @@
+import pandas as pd
+data = pd.read_csv('Training.tsv',sep='\t')
+data
+
+# Define function to preprocess text
+def preprocess_text(text):
+# Lowercasing apostrophe
+ text = to_lowercase(text)
+ #Normalising
+ text = normalize_apostrophes(text)
+ # Removing Contractions
+ text = remove_contraction(text)
+ # Converting number to words
+ text = convert_numbers_to_words(text)
+ # Removing URLs
+ text = remove_urls(text)
+ # Removing special characters
+ text = remove_special_characters(text)
+ # Tokenization and removing stopwords 
+ tokens = text.split()
+ tokens = [token for token in tokens if token not in english_stopwords]
+ # Joining tokens
+ text = ' '.join(tokens
+ return text
+
+def remove_contraction(text):
+ # Define contractions
+ contractions = {
+ "ain't": "am not / is not / are not / has not / have not",
+ "aren't": "are not",
+ "can't": "cannot",
+ "could've": "could have",
+ "couldn't": "could not",
+ "didn't": "did not",
+ "doesn't": "does not",
+ "don't": "do not",
+ "hadn't": "had not",
+ "hasn't": "has not",
+ "haven't": "have not",
+ "i'll": "i will",
+ "i'll've": "i will have",
+"i'm": "i am",
+ "i've": "i have",
+ "isn't": "is not",
+ "it'll": "it will",
+ "it's": "it is / it has",
+ "let's": "let us",
+ "we've": "we have",
+ "weren't": "were not",
+ "what'll": "what will",
+ "what're": "what are",
+ "what's": "what is / what has",
+ "you're": "you are",
+ "you've": "you have"
+ }
+ # Expanding contractions
+ for contraction, expansion in contractions.items():
+ text = text.replace(contraction, expansion)
+ return text
+
+
+# Function to remove convert number to words
+def convert_numbers_to_words(text):
+# Define a dictionary mapping numeric words to their corresponding words
+ num_words = {
+ '0': 'zero',
+ '1': 'one',
+ '2': 'two',
+ '3': 'three',
+ '4': 'four',
+ '5': 'five',
+ '6': 'six',
+ '7': 'seven',
+ '8': 'eight',
+ '9': 'nine'
+ }
+ # Converting numbers to words
+ for digit, word in num_words.items():
+ text = text.replace(digit, word)
+ return text
+
+def to_lowercase(text):
+ lowercase_text = ''
+ for char in text:
+ # Check if character is uppercase
+ if 'A' <= char <= 'Z':
+ # Convert uppercase to lowercase
+ lowercase_text += chr(ord(char) + 32)
+ else:
+ lowercase_text += char
+ return lowercase_text
+ 
+# Function to remove special characters
+def remove_special_characters(text):
+ # Define special characters
+ special_chars = {'!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=',
+ '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~'}
+ return ''.join(char for char in text if char not in special_chars)
+
+# Function to remove URLs
+def remove_urls(text):
+ # Split text into words
+ words = text.split()
+ # Filter out words that do not start with 'http' or 'https'
+ filtered_words = [word for word in words if not (word.startswith('http://') or 
+word.startswith('https://'))]
+ # Join the filtered words back into a string
+ return ' '.join(filtered_words)
+
+
+import emoji
+#import demoji
+#demoji.download_codes()
+
+def emo(text):
+ temp=emoji.demojize(text,delimiters=(" "," "))
+ temp=temp.replace("_"," ")
+ return temp
+data['emo']=data["text"].apply(lambda x:emo(x))
+
+
+data["clean_text"]=data['emo'].apply(lambda X: preprocess_text(X))
+data.head()
